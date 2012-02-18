@@ -25,6 +25,7 @@ class Game
   def assign_waiting_players_to_game
     Session.where(:state => Session::STATE_AWAITING_GAME).each do |session|
       self.players << Player.new( :session_id => session.id )
+      session.started_game
     end
     self.save
   end
@@ -35,6 +36,7 @@ class Game
       self.end_time = GAME_DURATION.seconds.from_now
       self.state = STATE_RUNNING
       self.save
+      GameServer.singleton.game_started
     else
       false
     end
@@ -44,6 +46,10 @@ class Game
     if self.state == STATE_RUNNING
       self.state = STATE_COMPLETE
       self.save
+      GameServer.singleton.game_finished
+      self.players.each do |player|
+        player.session.game_ended
+      end
     else
       false
     end

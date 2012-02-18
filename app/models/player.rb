@@ -15,6 +15,7 @@ class Player
 
   belongs_to :game
   belongs_to :session
+  has_many :player_impacts
 
   def infect
     if self.state == STATE_NOT_INFECTED

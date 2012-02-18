@@ -14,6 +14,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'pusher'
 
 # Use unicorn as the web server
 # gem 'unicorn'

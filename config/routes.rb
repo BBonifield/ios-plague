@@ -3,6 +3,11 @@ IosPlague::Application.routes.draw do
   # first created -> highest priority.
 
   resources :sessions, :only => [ :create, :destroy ]
+  resources :sessions, :only => [ :create ]
+  match 'game_server' => 'game_server#index'
+  match 'game_server/active_sessions' => 'game_server#active_sessions'
+  match 'game_server/start_game' => 'game_server#start_game'
+  match 'game_server/game_starting' => 'game_server#game_starting'
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action

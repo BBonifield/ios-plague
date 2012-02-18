@@ -23,11 +23,18 @@ class GameServer
     end
   end
 
+  def active_game
+    self.games.where(:state => Game::STATE_RUNNING).first
+  end
+
+  # state management
+
   def start_game
     if self.state == STATE_AWAITING_CONNECTIONS
       self.state = STATE_GAME_STARTING
       self.games << Game.new
       self.save
+      Pusher['game'].trigger('game-starting', {});
     else
       false
     end
@@ -37,6 +44,7 @@ class GameServer
     if self.state == STATE_GAME_STARTING
       self.state = STATE_GAME_IN_PROGRESS
       self.save
+      Pusher['game'].trigger('game-started', {});
     else
       false
     end

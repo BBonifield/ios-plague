@@ -30,11 +30,27 @@ class Session
     end
   end
 
+  def active_player
+    gs = GameServer.singleton
+    if gs.active_game
+      players.select { |p| gs.active_game.players.map{|p| p.id}.include?(p.id) }.first
+    end
+  end
+
   # state management
 
   def started_game
     if self.state == STATE_AWAITING_GAME
       self.state = STATE_IN_GAME
+      self.save
+    else
+      false
+    end
+  end
+
+  def game_ended
+    if self.state == STATE_IN_GAME
+      self.state = STATE_AWAITING_GAME
       self.save
     else
       false
